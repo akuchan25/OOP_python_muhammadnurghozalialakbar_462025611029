@@ -1,15 +1,13 @@
 from abc import ABC, abstractmethod
 
-# Custom Exception
 class MasterClassException(Exception): 
     pass
 
-# Abstract Base Class (Inheritance & Polymorphism)
 class User(ABC):
     def __init__(self, uid, nama, pwd):
         self.uid = uid
         self.nama = nama
-        self.__pwd = pwd  # Encapsulation (Private Attribute)
+        self.__pwd = pwd
 
     def check_pwd(self, pwd):
         return self.__pwd == pwd
@@ -18,7 +16,6 @@ class User(ABC):
     def menu(self): 
         pass
 
-# Model MasterClass dengan Magic Method __str__
 class MasterClass:
     def __init__(self, id_k, judul, mentor, harga, kuota):
         self.id_k = id_k
@@ -27,7 +24,6 @@ class MasterClass:
         self.harga = harga
         self.kuota = kuota
 
-    # Magic Method __str__
     def __str__(self):
         return f"[{self.id_k}] {self.judul} ({self.mentor}) - Rp{self.harga:,.0f} | Sisa Kuota: {self.kuota}"
 
@@ -36,12 +32,10 @@ class Peserta(User):
         super().__init__(uid, nama, pwd)
         self.riwayat = []
 
-    # Polymorphism
     def menu(self):
         print(f"\n--- MENU PESERTA ({self.nama}) ---\n1. Katalog  2. Daftar Kelas  3. Riwayat  4. Logout")
 
 class Admin(User):
-    # Polymorphism
     def menu(self):
         print(f"\n--- MENU ADMIN ({self.nama}) ---\n1. Tambah Kelas  2. Laporan Omset  3. Logout")
 
@@ -52,7 +46,6 @@ class Pendaftaran:
         self.kelas = kelas
         self.total = kelas.harga
 
-    # Static Method (Memenuhi syarat Advanced Methods)
     @staticmethod
     def buat_va(bank, id_reg):
         return f"88000-{bank[:3].upper()}-{id_reg}"
@@ -69,15 +62,13 @@ class Pendaftaran:
             raise MasterClassException("Kuota kelas sudah habis!")
         
         self.kelas.kuota -= 1
-        va = Pendaftaran.buat_va(bank, self.id_reg)  # Menggunakan Static Method
+        va = Pendaftaran.buat_va(bank, self.id_reg)
         self.peserta.riwayat.append(self)
         print(f"[BANK {bank}] Transfer VA: {va} | Total: Rp{self.total:,.0f} -> SUKSES!")
 
-    # Magic Method __str__
     def __str__(self):
         return f"{self.id_reg} | {self.kelas.judul} | Total: Rp{self.total:,.0f}"
 
-# Controller Utama
 class App:
     def __init__(self):
         self.kelas = [
@@ -109,7 +100,7 @@ class App:
             if isinstance(user, Peserta):
                 if p == "1":
                     for k in self.kelas: 
-                        print(k)  # Memanggil __str__ otomatis
+                        print(k)
                 elif p == "2":
                     for k in self.kelas: 
                         print(k)
@@ -130,7 +121,7 @@ class App:
                         print("Kelas tidak ditemukan!")
                 elif p == "3":
                     for r in user.riwayat:
-                        print(r)  # Memanggil __str__ otomatis
+                        print(r)
                 elif p == "4": 
                     break
             elif isinstance(user, Admin):
